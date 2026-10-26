@@ -1,0 +1,32 @@
+
+name: Compilar Persona
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Persona.cpp'
+      - '.github/workflows/compilar-persona.yml'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Preparar compilador
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          install: mingw-w64-x86_64-gcc
+
+      - name: Compilar Persona
+        shell: msys2 {0}
+        run: g++ Persona.cpp -o Persona.exe
+
+      - name: Guardar ejecutable
+        uses: actions/upload-artifact@v4
+        with:
+          name: Persona-exe
+          path: Persona.exe
