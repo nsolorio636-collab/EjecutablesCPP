@@ -1,0 +1,31 @@
+
+name: Compilar Areas
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Ejercicio 1.cpp'
+      - '.github/workflows/compilar.yml'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Preparar compilador
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          install: mingw-w64-x86_64-gcc
+
+      - name: Compilar
+        shell: msys2 {0}
+        run: g++ "Ejercicio 1.cpp" -o Areas.exe
+
+      - name: Guardar ejecutable
+        uses: actions/upload-artifact@v4
+        with:
+          name: Areas-exe
+          path: Areas.exe
